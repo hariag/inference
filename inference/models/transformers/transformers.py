@@ -74,7 +74,10 @@ class TransformerModel(RoboflowInferenceModel):
         self.cache_dir = os.path.join(MODEL_CACHE_DIR, self.endpoint + "/")
         self.initialize_model()
 
-    def initialize_model(self):
+    def set_model(self, model):
+        self.model = model
+
+    def initialize_pretrained_model(self):
         self.model = (
             self.transformers_class.from_pretrained(
                 self.cache_dir,
@@ -84,7 +87,8 @@ class TransformerModel(RoboflowInferenceModel):
             .eval()
             .to(self.dtype)
         )
-
+        
+    def initialize_model(self):
         self.processor = self.processor_class.from_pretrained(
             self.cache_dir, token=self.huggingface_token
         )
